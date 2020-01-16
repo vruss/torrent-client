@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "libs/bencode.hpp"
+#include "torrentfile/BencodeTorrent.h"
 
 int main()
 {
@@ -9,16 +10,11 @@ int main()
 
     if (stream.is_open())
     {
-        auto data = bencode::decode(stream);
-        auto value = boost::get<std::map<std::string, bencode::data>>(data);
+        BencodeTorrent bencodeTorrent(stream);
+        std::cout << "Opened: " << bencodeTorrent.info.name
+                  << " with tracker URL: " << bencodeTorrent.announce << "\n";
 
-        auto announce = value.at("announce");
-        std::string announce_t = boost::get<std::string>(announce);
-
-
-        std::cout << announce_t << "\n";
-        auto d = 3;
-
+//        auto torrentFile = bencodeTorrent.open(stream);
     }
     else
     {

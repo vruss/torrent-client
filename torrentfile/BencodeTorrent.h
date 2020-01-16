@@ -1,5 +1,5 @@
 //
-// Created by julia on 2020-01-15.
+// Created by Viktor Rosvall on 2020-01-15.
 //
 
 #ifndef TORRENT_CLIENT_BENCODETORRENT_H
@@ -10,10 +10,12 @@
 
 struct BencodeTorrent
 {
-    string announce;        // the URL of the tracker
-    BencodeInfo info;       // maps to a dictionary
+    bencode::string announce;       // the URL of the tracker
+    BencodeInfo info;               // maps to a dictionary
 
-    TorrentFile open(const std::string& path);
+    explicit BencodeTorrent(std::istream &stream);
+
+    TorrentFile open(std::istream &stream);
 };
 
 

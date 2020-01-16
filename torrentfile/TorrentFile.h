@@ -1,5 +1,5 @@
 //
-// Created by julia on 2020-01-15.
+// Created by Viktor Rosvall on 2020-01-15.
 //
 
 #ifndef TORRENT_CLIENT_TORRENTFILE_H
