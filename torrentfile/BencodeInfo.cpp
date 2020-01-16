@@ -4,11 +4,11 @@
 
 #include "BencodeInfo.h"
 
-BencodeInfo::BencodeInfo(const bencode::dict& dict)
+BencodeInfo::BencodeInfo(const bencode::dict& info)
 {
-    pieces = boost::get<bencode::string>(dict.at("pieces"));
-    pieceLength = boost::get<bencode::integer>(dict.at("piece length"));
-    length = boost::get<bencode::integer>(dict.at("length"));
-    name = boost::get<bencode::string>(dict.at("name"));
+    pieces = boost::get<bencode::string>(info.at("pieces"));
+    pieceLength = boost::get<bencode::integer>(info.at("piece length"));
+    length = boost::get<bencode::integer>(info.at("length"));
+    name = boost::get<bencode::string>(info.at("name"));
 }
 

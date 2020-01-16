@@ -22,7 +22,7 @@ struct BencodeInfo
 
     BencodeInfo() = default;
 
-    explicit BencodeInfo(const bencode::dict& dict);
+    explicit BencodeInfo(const bencode::dict& info);
 };
 
 

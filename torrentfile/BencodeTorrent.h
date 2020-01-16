@@ -8,14 +8,19 @@
 #include "BencodeInfo.h"
 #include "TorrentFile.h"
 
-struct BencodeTorrent
+class BencodeTorrent
 {
+private:
     bencode::string announce;       // the URL of the tracker
     BencodeInfo info;               // maps to a dictionary
 
-    explicit BencodeTorrent(std::istream &stream);
+    TorrentFile toTorrentFile(const bencode::dict& info);
 
-    TorrentFile open(std::istream &stream);
+    std::basic_string<char> hash(const std::string& bytes);
+
+public:
+    TorrentFile open(std::istream& stream);
+
 };
 
 
