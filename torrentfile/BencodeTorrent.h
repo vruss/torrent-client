@@ -7,6 +7,7 @@
 
 #include "BencodeInfo.h"
 #include "TorrentFile.h"
+#include <cstdint>
 
 class BencodeTorrent
 {
@@ -16,7 +17,7 @@ private:
 
     TorrentFile toTorrentFile(const bencode::dict& info);
 
-    std::basic_string<char> hash(const std::string& bytes);
+    std::array<uint8_t, 20> hash(const std::string& bytes);
 
 public:
     TorrentFile open(std::istream& stream);

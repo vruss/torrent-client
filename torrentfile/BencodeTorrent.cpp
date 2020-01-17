@@ -2,13 +2,9 @@
 // Created by Viktor Rosvall on 2020-01-15.
 //
 
-#include "BencodeTorrent.h"
-//#include "../libs/sha1-0.2/sha1.h"
-#include "cryptopp/sha.h"
-#include "cryptopp/cryptlib.h"
 #include <iostream>
-#include <hex.h>
-#include <files.h>
+#include "BencodeTorrent.h"
+#include "sha.h"
 
 TorrentFile BencodeTorrent::open(std::istream& stream)
 {
@@ -26,38 +22,37 @@ TorrentFile BencodeTorrent::open(std::istream& stream)
 
 TorrentFile BencodeTorrent::toTorrentFile(const bencode::dict& _info)
 {
-    auto hashedInfo = hash(bencode::encode(_info));
-    std::cout << hashedInfo << "\n";
-//    return TorrentFile();
+    std::array<uint8_t, 20> hashedInfo = hash(bencode::encode(_info));
+    std::vector<std::array<uint8_t, 20>> pieceHashes;
+    pieceHashes.push_back(hashedInfo);
+
+    auto torrentFile = TorrentFile(announce,
+                                   hashedInfo,
+                                   pieceHashes,
+                                   info.pieceLength,
+                                   info.length,
+                                   info.name);
+    return torrentFile;
 }
 
-std::basic_string<char> BencodeTorrent::hash(const std::string& bytes)
+std::array<uint8_t, 20> BencodeTorrent::hash(const std::string& bytes)
 {
-    using namespace CryptoPP;
-    HexEncoder encoder(new FileSink(std::cout));
-
-    std::string msg = "Yoda said, Do or do not. There is no try.";
     std::string digest;
+    std::array<uint8_t, 20> byteHash{};
 
-    SHA1 hash;
-    hash.Update((const byte*) bytes.data(), bytes.size());
+    // create hash
+    CryptoPP::SHA1 hash;
+    hash.Update((const CryptoPP::byte*) bytes.data(), bytes.size());
     digest.resize(hash.DigestSize());
-    hash.Final((byte*) &digest[0]);
+    hash.Final((CryptoPP::byte*) &digest[0]);
 
-    std::cout << "Message: " << msg << std::endl;
-
-    std::cout << "Digest: ";
-    StringSource(digest, true, new Redirector(encoder));
-    std::cout << std::endl;
-
-//    auto bytes = bencode::encode(boost::get<bencode::dict>(values.at("info")));
-//    SHA1* sha1 = new SHA1();
-//    sha1->addBytes(bytes, strlen(bytes));
-//    unsigned char* digest = sha1->getDigest();
-//    sha1->hexPrinter(digest, 20);
-//    delete sha1;
-//    free(digest);
-    return digest;
+    // save hash to byte array
+    auto it = digest.data();
+    for (int i = 0; i < hash.DigestSize(); i++)
+    {
+        byteHash.at(i) = (uint8_t) it[i];
+    }
+    return byteHash;
 }
 
 

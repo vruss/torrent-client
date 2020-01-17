@@ -20,6 +20,8 @@ struct BencodeInfo
     bencode::integer length;         // length of file in bytes
     bencode::string name;            // advisory file name
 
+    std::string bencodeString;       // original bencoded string
+
     BencodeInfo() = default;
 
     explicit BencodeInfo(const bencode::dict& info);

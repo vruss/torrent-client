@@ -10,5 +10,7 @@ BencodeInfo::BencodeInfo(const bencode::dict& info)
     pieceLength = boost::get<bencode::integer>(info.at("piece length"));
     length = boost::get<bencode::integer>(info.at("length"));
     name = boost::get<bencode::string>(info.at("name"));
+
+    bencodeString = bencode::encode(info);
 }
 
