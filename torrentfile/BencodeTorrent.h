@@ -5,9 +5,9 @@
 #ifndef TORRENT_CLIENT_BENCODETORRENT_H
 #define TORRENT_CLIENT_BENCODETORRENT_H
 
+#include <cstdint>
 #include "BencodeInfo.h"
 #include "TorrentFile.h"
-#include <cstdint>
 
 class BencodeTorrent
 {
@@ -17,7 +17,9 @@ private:
 
     TorrentFile toTorrentFile(const bencode::dict& info);
 
-    std::array<uint8_t, 20> hash(const std::string& bytes);
+    static std::array<uint8_t, HASH_LENGTH> hash(const std::string& bytes);
+
+    std::vector<std::array<uint8_t, HASH_LENGTH>> splitPieceHashes();
 
 public:
     TorrentFile open(std::istream& stream);

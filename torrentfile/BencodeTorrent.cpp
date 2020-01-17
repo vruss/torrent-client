@@ -22,9 +22,8 @@ TorrentFile BencodeTorrent::open(std::istream& stream)
 
 TorrentFile BencodeTorrent::toTorrentFile(const bencode::dict& _info)
 {
-    std::array<uint8_t, 20> hashedInfo = hash(bencode::encode(_info));
-    std::vector<std::array<uint8_t, 20>> pieceHashes;
-    pieceHashes.push_back(hashedInfo);
+    std::array<uint8_t, HASH_LENGTH> hashedInfo = hash(bencode::encode(_info));
+    std::vector<std::array<uint8_t, HASH_LENGTH>> pieceHashes = splitPieceHashes();
 
     auto torrentFile = TorrentFile(announce,
                                    hashedInfo,
@@ -35,10 +34,10 @@ TorrentFile BencodeTorrent::toTorrentFile(const bencode::dict& _info)
     return torrentFile;
 }
 
-std::array<uint8_t, 20> BencodeTorrent::hash(const std::string& bytes)
+std::array<uint8_t, HASH_LENGTH> BencodeTorrent::hash(const std::string& bytes)
 {
     std::string digest;
-    std::array<uint8_t, 20> byteHash{};
+    std::array<uint8_t, HASH_LENGTH> byteHash{};
 
     // create hash
     CryptoPP::SHA1 hash;
@@ -55,4 +54,29 @@ std::array<uint8_t, 20> BencodeTorrent::hash(const std::string& bytes)
     return byteHash;
 }
 
+std::vector<std::array<uint8_t, 20>> BencodeTorrent::splitPieceHashes()
+{
+    std::vector<std::array<uint8_t, 20>> hashes;
 
+    // check if hash length is correct
+    if (info.pieces.length() % HASH_LENGTH != 0)
+    {
+        std::cerr << "Invalid hash length!\n";
+        return hashes;
+    }
+
+    // iterate through all hashes
+    unsigned int numHashes = info.pieces.length() / HASH_LENGTH;
+    for (int i = 0; i < numHashes; i++)
+    {
+        // substring the hash pieces into separate hash arrays
+        std::array<uint8_t, HASH_LENGTH> byteHash{};
+        auto hashPtr = info.pieces.substr(i * HASH_LENGTH, HASH_LENGTH).data();
+        for (int j = 0; j < HASH_LENGTH; j++)
+        {
+            byteHash.at(j) = (uint8_t) hashPtr[j];
+        }
+        hashes.emplace_back(std::array<uint8_t, 20>(byteHash));
+    }
+    return hashes;
+}

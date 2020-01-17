@@ -5,6 +5,7 @@
 #ifndef TORRENT_CLIENT_TORRENTFILE_H
 #define TORRENT_CLIENT_TORRENTFILE_H
 
+#define HASH_LENGTH 20
 
 #include <string>
 #include <vector>
@@ -14,8 +15,8 @@
 struct TorrentFile
 {
     std::string announce;
-    std::array<uint8_t, 20> infoHash;
-    std::vector<std::array<uint8_t, 20>> pieceHashes;
+    std::array<uint8_t, HASH_LENGTH> infoHash;
+    std::vector<std::array<uint8_t, HASH_LENGTH>> pieceHashes;
     int pieceLength;
     int length;
     std::string name;

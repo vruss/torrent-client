@@ -33,6 +33,6 @@
 *.out
 *.app
 
-/cmake-build-debug/
+/cmake-build-debug/Q
 /libs/cryptopp/
 /libs/cryptopp/*

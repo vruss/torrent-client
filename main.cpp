@@ -8,18 +8,10 @@ int main()
     std::fstream stream("torrentfile/testdata/debian-10.2.0-amd64-netinst.iso.torrent",
                         std::ios::in);
 
-
-
     if (stream.is_open())
     {
         BencodeTorrent bencodeTorrent;
-        bencodeTorrent.open(stream);
-//        std::cout << "Opened: " << bencodeTorrent.info.name
-//                  << " with tracker URL: " << bencodeTorrent.announce << "\n";
-
-
-
-//        auto torrentFile = bencodeTorrent.toTorrentFile(stream);
+        TorrentFile torrentFile = bencodeTorrent.open(stream);
     }
     else
     {
